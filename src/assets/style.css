@@ -923,3 +923,41 @@ button:focus-visible {
     transform: none !important;
   }
 }
+/* ---------- Admin Login UI (ShipTraceUSA) ---------- */
+
+.login-card {
+  max-width: 420px;
+}
+
+/* rounded inputs */
+.input-wrap {
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.input-wrap:focus-within {
+  box-shadow: 0 8px 30px rgba(107, 33, 168, 0.06);
+  border-color: var(--color-primary);
+}
+
+/* visually align ui with brand */
+.login-card img {
+  background: transparent;
+}
+
+/* small text colors */
+.login-card p {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+/* focus accessible */
+input:focus {
+  outline: none;
+}
+
+/* page background */
+body {
+  background: var(--color-accent);
+}
+
+/* button vars already match root colors */

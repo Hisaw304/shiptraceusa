@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -9,12 +10,20 @@ import Footer from "./components/Footer";
 import AdminPage from "./pages/AdminPage";
 import TrackSearchPage from "./pages/TrackSearchPage";
 import About from "./pages/About";
-import { Toaster } from "react-hot-toast";
+import Preloader from "./components/Preloader";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
 
 const App = () => {
+  const [showPreloader, setShowPreloader] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPreloader(false), 2200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Toast notifications */}
       <Toaster
         position="bottom-center"
         toastOptions={{
@@ -25,26 +34,16 @@ const App = () => {
             fontWeight: 500,
             borderRadius: "10px",
             padding: "12px 18px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
-          },
-          success: {
-            iconTheme: {
-              primary: "var(--color-secondary)",
-              secondary: "#fff",
-            },
-          },
-          error: {
-            style: {
-              background: "#dc2626", // red for errors
-            },
           },
         }}
       />
 
-      {/* Navbar */}
+      <Preloader
+        visible={showPreloader}
+        onHidden={() => setShowPreloader(false)}
+      />
       <Navbar />
 
-      {/* Main content */}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -52,11 +51,18 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/track/:id" element={<TrackingPage />} />
           <Route path="/track" element={<TrackSearchPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
