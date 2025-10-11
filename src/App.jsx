@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Contact from "./Pages/Contact";
+import Contact from "./pages/Contact";
 import TrackingPage from "./pages/TrackingPage";
 import Footer from "./components/Footer";
 import AdminPage from "./pages/AdminPage";
@@ -56,7 +56,7 @@ const App = () => {
         </Routes>
       </main>
 
-      {/* Footer can be added later if needed */}
+      {/* Footer */}
       <Footer />
     </div>
   );
