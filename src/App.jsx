@@ -2,11 +2,11 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Home from "./Pages/Home";
+import Home from "./pages/Home";
 import Contact from "./Pages/Contact";
-import TrackingPage from "./Pages/TrackingPage";
+import TrackingPage from "./pages/TrackingPage";
 import Footer from "./components/Footer";
-import AdminPage from "./Pages/AdminPage";
+import AdminPage from "./pages/AdminPage";
 import TrackSearchPage from "./pages/TrackSearchPage";
 import About from "./pages/About";
 import { Toaster } from "react-hot-toast";
