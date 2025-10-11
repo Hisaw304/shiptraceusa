@@ -1,0 +1,360 @@
+/* tracking.css
+   Import in component: `import './tracking.css'`
+   Root variables (fallbacks) — adjust to match your design tokens if you already have them.
+*/
+:root {
+  --trk-orange: #ff7a00; /* heading bg */
+  --trk-purple: #6b21a8; /* border / accent */
+  --trk-note-bg: #fff7ed; /* subtle note background */
+  /* keep compatibility with your existing color vars if used elsewhere */
+  --color-secondary: var(--trk-orange);
+  --color-primary: var(--trk-purple);
+}
+
+/* container tweaks */
+.tracking-container {
+}
+
+/* ensure the small decorative shapes pick the same orange */
+.tracking-container .shape rect,
+.tracking-container .shape circle {
+  fill: var(--color-secondary);
+}
+
+/* prominent CTA card */
+.tracking-cta,
+.trk-card {
+  border: 1px solid var(--trk-purple);
+  /* slight glassy white to separate from page */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 255, 255, 0.96)
+  );
+  box-shadow: 0 8px 22px rgba(107, 33, 168, 0.06);
+}
+
+/* inline small heading used inside CTA */
+.card-heading-inline {
+  display: inline-block;
+  background: transparent;
+  color: var(--trk-purple);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+/* orange chip-style headings used across cards */
+.card-heading {
+  display: inline-block;
+  background: var(--trk-orange);
+  color: #fff;
+  padding: 0.22rem 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+/* status-note style inside CTA */
+.trk-status-note {
+  background: var(--trk-note-bg);
+  border-left: 4px solid var(--trk-purple);
+}
+
+/* slightly larger important text inside CTA */
+.tracking-cta .text-lg,
+.tracking-cta .text-xl {
+  letter-spacing: -0.01em;
+}
+
+/* ensure card borders stronger than default tailwind borders */
+.trk-card {
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--trk-purple) !important;
+}
+
+/* subtle responsive adjustments */
+@media (max-width: 768px) {
+  .tracking-cta {
+    padding: 1rem;
+  }
+  .card-heading {
+    font-size: 0.72rem;
+    padding: 0.18rem 0.45rem;
+  }
+}
+/* adminform.css
+   Import in your component file: import './adminform.css'
+   Root tokens (match with other components)
+
+
+/* Form container tweaks */
+.admin-form {
+  font-family: inherit;
+  color: #111827;
+}
+
+/* Main form heading */
+.form-heading {
+  color: var(--trk-purple);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+/* Generic card base (applied to every top-level card) */
+.form-card {
+  border: 1px solid var(--trk-purple) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 255, 255, 0.96)
+  );
+  box-shadow: 0 6px 18px rgba(107, 33, 168, 0.04);
+  padding: 1rem; /* tailwind p-4 equivalent */
+}
+
+/* Card title: centered orange chip */
+.card-title {
+  display: inline-block;
+  background: var(--trk-orange);
+  color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.6rem;
+  font-weight: 700;
+  text-align: center;
+  font-size: 1.02rem;
+  margin: 0 auto 0.9rem;
+  width: max-content;
+  box-shadow: 0 6px 18px rgba(255, 122, 0, 0.08);
+}
+
+/* Slight smaller variant for h4 use */
+.card-title.small {
+  font-size: 0.98rem;
+  padding: 0.32rem 0.7rem;
+}
+
+/* Input / select / textarea base */
+.form-input,
+.form-select,
+textarea.form-input {
+  font-size: 1rem;
+  line-height: 1.2;
+  border: 1px solid rgba(107, 33, 168, 0.12);
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 80ms ease;
+  background: #ffffff;
+}
+
+/* placeholder color (soft) */
+.form-input::placeholder,
+.form-select::placeholder {
+  color: #9ca3af;
+}
+
+/* Focus: border becomes orange + subtle focus ring */
+.form-input:focus,
+.form-select:focus,
+textarea.form-input:focus {
+  outline: none;
+  border-color: var(--trk-orange) !important;
+  box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.1);
+}
+
+/* Make selects look consistent */
+.form-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--trk-purple);
+  color: #ffffff;
+  border: 1px solid var(--trk-purple);
+  font-weight: 600;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Secondary (cancel) — orange outline that fills on hover */
+.btn-secondary {
+  background: transparent;
+  color: var(--trk-orange);
+  border: 1px solid var(--trk-orange);
+  font-weight: 600;
+}
+.btn-secondary:hover {
+  background: var(--trk-orange);
+  color: #fff;
+}
+
+/* Center card headings behavior on narrow screens */
+@media (max-width: 640px) {
+  .card-title {
+    font-size: 0.98rem;
+    padding: 0.36rem 0.7rem;
+  }
+  .form-input,
+  .form-select {
+    padding: 0.65rem;
+  }
+}
+/* Records table UI (paste into your global CSS) */
+
+/* Section heading */
+.records-table-heading {
+  color: var(--color-primary); /* uses your global root */
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+/* Wrapper: purple border */
+.records-table-wrapper {
+  border: 2px solid var(--color-primary);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  overflow-x: auto; /* 👈 add this line */
+  /* subtle lift */
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.04);
+}
+
+/* Table base */
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  font-size: 0.95rem;
+}
+
+/* THEAD: purple background + white text (as requested: tr bg = purple + white text) */
+.records-thead tr {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.records-thead th {
+  padding: 0.75rem 0.75rem;
+  text-align: left;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Body rows: subtle purple top border, keep body text dark for readability */
+.records-row {
+  border-top: 1px solid var(--color-primary);
+  background: #fff;
+  color: inherit;
+}
+
+/* Hover on rows for quick scanning */
+.records-table tbody tr.records-row:hover {
+  background: rgba(107, 33, 168, 0.04); /* subtle purple tint */
+}
+
+/* Cells */
+.records-table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-bottom: none;
+  color: #0f172a; /* ensure readable dark text for body content */
+}
+
+/* Muted small text */
+.text-muted {
+  color: rgba(15, 23, 42, 0.55);
+}
+
+/* Thumbnail fallback */
+.records-noimage {
+  background: rgba(15, 23, 42, 0.04);
+  color: rgba(15, 23, 42, 0.4);
+}
+
+/* Buttons — using your root colors (primary = purple, accent = orange) */
+
+/* Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+/* Primary (Next Stop) - purple */
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(0.96);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Accent (Edit) - orange */
+.btn-accent {
+  background: var(--color-secondary);
+  color: #fff;
+  border-color: var(--color-secondary);
+}
+.btn-accent:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.96);
+}
+
+/* Danger (Delete) - subtle outline red to indicate destructive action */
+.btn-danger {
+  background: transparent;
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.12);
+}
+.btn-danger:hover {
+  background: rgba(220, 38, 38, 0.06);
+}
+
+/* small responsive tweaks */
+@media (max-width: 768px) {
+  .records-table {
+    min-width: 0;
+    font-size: 0.92rem;
+  }
+
+  .records-table-heading {
+    font-size: 1rem;
+  }
+  .records-thead th {
+    font-size: 0.75rem;
+    padding: 0.6rem;
+  }
+  .records-table td {
+    padding: 0.6rem;
+  }
+  .btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}

@@ -1,0 +1,925 @@
+/* ─────────────────────────────
+   ShipTraceUSA Global Styles
+   ───────────────────────────── */
+
+:root {
+  --color-primary: #6b21a8; /* Deep Purple */
+  --color-secondary: #f97316; /* Orange */
+  --color-accent: #e0f2fe; /* Light Blue background */
+}
+
+body {
+  background-color: var(--color-accent);
+  color: #1f2937; /* neutral dark gray for body text */
+}
+
+/* Links and hover underline */
+.link-hover {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.link-hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.25s ease-in-out;
+}
+.link-hover:hover::after {
+  width: 100%;
+}
+
+/* Button style */
+.btn-orange {
+  background-color: var(--color-secondary);
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.btn-orange:hover {
+  transform: translateY(-1px);
+  background-color: #ea580c;
+}
+
+/* Mobile menu animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.mobile-animate {
+  animation: slideDown 0.2s ease-out;
+}
+/* ────────────────
+   HERO SECTION STYLES
+   ──────────────── */
+
+.hero-container {
+  background-color: var(--color-accent);
+  position: relative;
+  color: #fff;
+}
+
+.hero-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  opacity: 0.3;
+  z-index: 1;
+}
+
+/* Make background images smooth and responsive */
+.hero-container .bg-cover {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.6s ease-in-out;
+}
+
+/* Adjust hero text for smaller screens */
+@media (max-width: 640px) {
+  .hero-container h1 {
+    font-size: 1.9rem;
+  }
+  .hero-container p {
+    font-size: 1rem;
+  }
+}
+/* ---------- About section: shapes, cards, images ---------- */
+
+/* Shape spacing - keeps the small decorative bars aligned */
+.shape {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+.shape svg {
+  display: block;
+  height: 5px;
+  width: 59px;
+  overflow: visible;
+}
+
+/* Left/right shape spacing tweaks (optional visual nudge) */
+.shape-left {
+  transform: translateY(0);
+}
+.shape-right {
+  transform: translateY(0);
+}
+
+/* Cards: base + hover */
+.about-card {
+  background-color: var(--color-accent); /* light-blue default */
+  will-change: transform, background-color;
+}
+
+.about-card:hover {
+  background-color: var(--color-primary); /* purple on hover */
+}
+
+/* Icon: purple on light background, white on purple */
+.about-card .lucide {
+  transition: color 180ms ease;
+}
+
+/* Image panel background (prevents gray flash) */
+.about-image-bg {
+  background-color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Image smooth fade - starts invisible until loaded */
+.about-image-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 700ms ease-in-out, transform 700ms ease-in-out;
+}
+
+/* when JS toggles loaded -> opacity becomes 1 by adding inline class */
+.about-image-bg img.opacity-100 {
+  opacity: 1;
+}
+
+/* small dot buttons */
+.about-image-bg button[aria-label] {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* accessibility focus */
+.about-card:focus-visible,
+button:focus-visible {
+  outline: 3px solid rgba(107, 33, 168, 0.14);
+  outline-offset: 3px;
+}
+
+/* responsive tweak: ensure cards don't become too large on wide screens */
+@media (min-width: 1280px) {
+  .about-card {
+    max-width: 320px;
+  }
+}
+
+/* ensure button sits below paragraph on mobile (markup order already forces this).
+   This rule is defensive: keeps button below text on small screens. */
+@media (max-width: 767px) {
+  .about-section-button {
+    display: block;
+    margin-top: 1rem;
+  }
+}
+
+/* Cards + shadows */
+.card {
+  background-clip: padding-box;
+  /* border color is set inline via style to use var(--color-primary) */
+  box-shadow: 0 12px 30px rgba(255, 165, 0, 0.08); /* soft orange shadow */
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+
+.card:hover {
+  box-shadow: 0 18px 40px rgba(255, 140, 0, 0.14);
+  transform: translateY(-4px);
+}
+
+/* circle bigger and sits on top of card */
+.step-circle {
+  /* border color + background color assigned inline for full control, but fallback here */
+  background-color: var(--color-accent);
+  border-color: var(--color-primary);
+  color: var(--color-secondary); /* icon color by default */
+  transition: background-color 200ms ease, color 200ms ease,
+    transform 180ms ease;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.06);
+}
+
+/* make sure svg icons inside circle scale nicely */
+.step-circle svg,
+.step-circle .lucide,
+.step-circle .step-icon {
+  width: 32px;
+  height: 32px;
+  color: inherit;
+}
+
+/* number badge positioned relative to the circle */
+.step-number {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(99, 49, 129, 0.12);
+  margin-left: 22px; /* nudges it to bottom-right visually relative to circle container */
+  margin-top: -6px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+/* On hover: number becomes black, circle turns purple (icon white) if desired */
+.how-step:hover .step-number,
+.how-step:focus-within .step-number {
+  background-color: #000;
+  color: #fff;
+}
+
+/* also change the circle on hover: purple bg and white icon */
+.how-step:hover .step-circle,
+.how-step:focus-within .step-circle {
+  background-color: var(--color-primary);
+  color: #fff;
+  transform: translateY(-4px);
+}
+
+/* responsive tweaks */
+@media (max-width: 640px) {
+  .step-circle {
+    width: 72px;
+    height: 72px;
+  } /* a bit smaller on tiny screens */
+  .step-circle svg {
+    width: 28px;
+    height: 28px;
+  }
+  .step-number {
+    width: 36px;
+    height: 36px;
+    margin-left: 18px;
+    margin-top: -6px;
+    font-size: 0.85rem;
+  }
+}
+
+/* accessibility focus ring */
+.how-step:focus-within {
+  outline: 3px solid rgba(107, 33, 168, 0.08);
+  outline-offset: 3px;
+}
+/* ---------- Trusted Banner / Stats styles (ShipTraceUSA) ---------- */
+
+.trusted-banner {
+  --overlay: rgba(0, 0, 0, 0.55);
+  background-color: var(--color-accent); /* fallback while bg image loads */
+}
+
+/* make sure background image doesn't flash; overlay keeps text readable */
+.trusted-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Stat card base: transparent so background image shows through */
+.stat-card {
+  background-clip: padding-box;
+}
+
+/* circle: light accent bg with purple border; icon orange by default */
+.stat-circle {
+  background-color: var(--color-accent); /* light blue */
+  border-color: var(--color-primary); /* purple */
+  color: var(--color-secondary); /* icon color (orange) */
+  transition: background-color 200ms ease, color 200ms ease,
+    transform 160ms ease;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.12);
+}
+
+/* ensure lucide icons inherit color */
+.stat-circle .lucide,
+.stat-circle .stat-icon {
+  color: inherit;
+  transition: color 160ms ease;
+}
+
+/* On hover of card: circle bg -> purple; icon -> white; lift the circle slightly */
+.stat-card:hover .stat-circle,
+.stat-card:focus-within .stat-circle {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  transform: translateY(-6px);
+}
+
+/* Keep number always white and consistent */
+.stat-number {
+  color: #ffffff;
+}
+
+/* spacing for small screens */
+@media (max-width: 640px) {
+  .stat-circle {
+    width: 56px;
+    height: 56px;
+  }
+  .stat-number {
+    font-size: 1.25rem;
+  }
+}
+
+/* shapes (reused) */
+.shape {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+/* accessibility: focus ring for keyboard users */
+.stat-card:focus-within {
+  outline: 3px solid rgba(107, 33, 168, 0.12);
+  outline-offset: 3px;
+}
+/* ---------- Shipping Services styles ---------- */
+
+.service-card {
+  background-clip: padding-box;
+  /* keep card compact */
+  min-height: 320px; /* prevents cards collapsing, adjust as needed */
+  display: flex;
+  flex-direction: column;
+}
+
+/* image area fallback color avoids gray flash while img loads */
+.service__img {
+  position: relative;
+  background-color: var(--color-accent);
+}
+
+/* icon circle overlay (placed inside image) */
+.service__img-icon {
+  position: absolute;
+  z-index: 10;
+}
+
+/* circle default: light blue background, purple border, orange icon */
+.service-circle {
+  background-color: var(--color-accent);
+  border-color: var(--color-primary);
+  color: var(--color-secondary); /* icon color */
+  transition: background-color 220ms ease, color 180ms ease,
+    transform 160ms ease;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.08);
+}
+
+/* ensure lucide icons inherit color */
+.service-circle .lucide,
+.service-circle .service-icon {
+  color: inherit;
+}
+
+/* on hover/focus of card: circle bg -> purple, icon -> white */
+.service-card:hover .service-circle,
+.service-card:focus-within .service-circle {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  transform: translateY(-4px);
+}
+
+/* image fade in */
+.service__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+.service__img img.opacity-100 {
+  opacity: 1;
+}
+
+/* keep button visible and stable */
+.service-card .btn {
+  flex-shrink: 0;
+}
+
+/* responsive tweaks */
+@media (min-width: 1024px) {
+  .service-card {
+    min-height: 360px;
+  }
+}
+
+/* small accessibility focus */
+.service-card:focus-within {
+  outline: 3px solid rgba(107, 33, 168, 0.12);
+  outline-offset: 3px;
+}
+/* Testimonials slider tweaks */
+.testimonial-slider {
+  position: relative;
+}
+
+/* track gap + smoothness */
+.testimonial-track {
+  display: flex;
+  gap: 1rem; /* spacing between slides */
+  will-change: transform;
+}
+
+/* cards: remove external margins (they caused wide look) and use internal padding */
+.testimonial-card {
+  min-height: 160px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+/* card hover */
+.testimonial-card:hover,
+.testimonial-card:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.1);
+}
+
+/* avatar sizing */
+.testimonial-card img {
+  object-fit: cover;
+}
+
+/* responsive adjustments */
+@media (max-width: 767px) {
+  .testimonial-card {
+    min-height: 150px;
+    padding: 14px;
+  }
+  .testimonial-track {
+    gap: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .testimonial-card {
+    min-height: 170px;
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .testimonial-card {
+    min-height: 180px;
+    padding: 18px;
+  }
+}
+
+/* arrows: slightly larger on bigger screens */
+.testimonial-slider button[aria-label="Previous testimonial"],
+.testimonial-slider button[aria-label="Next testimonial"] {
+  width: 42px;
+  height: 42px;
+}
+
+/* accessibility focus */
+.testimonial-card:focus {
+  outline: 3px solid rgba(99, 49, 129, 0.12);
+  outline-offset: 3px;
+}
+
+/* ---------- Contact section (ShipTraceUSA) ---------- */
+/* floating input style (stable sizing, no placeholder jump) */
+.input-floating {
+  position: relative;
+  display: block;
+}
+.input-floating input,
+.input-floating textarea {
+  width: 100%;
+  padding: 1rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #e6e6ef;
+  background: #fff;
+  font-size: 1rem;
+  color: #111827;
+  transition: box-shadow 180ms ease, border-color 160ms ease;
+  resize: vertical;
+}
+.input-floating textarea {
+  min-height: 140px;
+}
+
+/* placeholder is intentionally a single space in the JSX - use label as visible hint */
+.input-floating > span {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  pointer-events: none;
+  font-size: 0.95rem;
+  color: #6b7280; /* neutral */
+  background: transparent;
+  padding: 0 0.2rem;
+  transition: transform 160ms ease, top 160ms ease, font-size 160ms ease,
+    color 160ms ease;
+}
+
+/* when user focuses or field is filled, float the label above */
+.input-floating input:focus + span,
+.input-floating input:not(:placeholder-shown) + span,
+.input-floating textarea:focus + span,
+.input-floating textarea:not(:placeholder-shown) + span {
+  transform: translateY(-10px);
+  top: -0.6rem;
+  font-size: 0.8rem;
+  color: var(--primary);
+  background: white;
+}
+
+/* focus style */
+.input-floating input:focus,
+.input-floating textarea:focus {
+  outline: none;
+  box-shadow: 0 6px 24px rgba(107, 33, 168, 0.12);
+  border-color: var(--primary);
+}
+
+/* form card */
+.contact-form-card {
+  background: #fff;
+}
+
+/* button */
+.btn-orange {
+  background: var(--color-secondary);
+  color: white;
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+}
+.btn-orange:hover {
+  filter: brightness(0.95);
+}
+
+/* map card and floating info */
+.map-card {
+  position: relative;
+  min-height: 320px;
+}
+.map-floating {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+  z-index: 40;
+}
+
+/* small responsive tweaks */
+@media (max-width: 1024px) {
+  .map-floating {
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.6rem;
+  }
+}
+
+/* prevent leaflet default marker icon issues if ever used */
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* ensure hero colors present while images load */
+.contact-section .leaflet-container {
+  background: var(--color-accent);
+}
+
+/* accessibility */
+.contact-form-card:focus-within {
+  outline: 3px solid rgba(107, 33, 168, 0.08);
+  outline-offset: 4px;
+}
+/* contact-page.css - updated to use hero bg and simple CTA */
+
+/* reuse container padding for layout consistency */
+.container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Hero */
+.contact-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+}
+.contact-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.48) 0%,
+    rgba(0, 0, 0, 0.56) 100%
+  );
+  z-index: 0;
+}
+.contact-hero .container {
+  position: relative;
+  z-index: 2;
+}
+.label-row .small-label {
+  color: var(--color-secondary);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.hero-h1 {
+  font-size: 2rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-weight: 800;
+}
+.hero-lead {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* CTA immediate */
+.cta-immediate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #fff, #fff);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
+}
+
+/* buttons tokens (re-usable) */
+.btn-primary {
+  background: var(--color-secondary);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.12);
+}
+.btn-primary:hover {
+  filter: brightness(0.97);
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* FAQ/Stats container adjustments so imported components align visually */
+.container > div > * {
+  max-width: 100%;
+}
+
+/* small responsive tweaks */
+@media (min-width: 1024px) {
+  .hero-h1 {
+    font-size: 2.5rem;
+  }
+}
+/* ---------- FAQ Section (ShipTraceUSA) ---------- */
+
+.faq-section {
+}
+
+/* FAQ card */
+.faq-card {
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+/* question button */
+.faq-question {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  background: transparent;
+  cursor: pointer;
+}
+.faq-question:focus {
+  box-shadow: 0 6px 24px rgba(107, 33, 168, 0.08);
+  border-radius: 0;
+}
+
+/* answer */
+.faq-answer {
+  background: white;
+}
+
+/* search input */
+.faq-section input[type="search"] {
+  background: #fff;
+}
+
+/* rotate chevron smoothly */
+.faq-question svg {
+  transition: transform 220ms ease;
+}
+
+/* small responsive spacing */
+@media (max-width: 640px) {
+  .faq-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* keyboard focus visible */
+.faq-question:focus {
+  outline: 3px solid rgba(107, 33, 168, 0.12);
+  outline-offset: 2px;
+}
+
+/* prefer-reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .faq-answer {
+    transition: none !important;
+  }
+  .faq-question svg {
+    transition: none !important;
+  }
+}
+
+/* optional visual polish */
+.faq-card + .faq-card {
+  margin-top: 0.5rem;
+}
+/* -------- TrackSearchPage styles (ShipTraceUSA) -------- */
+
+.track-top {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overlay */
+.track-top .track-top-overlay {
+  mix-blend-mode: multiply;
+}
+
+/* centered search card */
+.track-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(255, 255, 255, 0.96)
+  );
+  padding: 1.25rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(2, 6, 23, 0.12);
+}
+
+/* Recent chips */
+.recent-chip {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+}
+
+/* small responsive */
+@media (max-width: 640px) {
+  .track-top {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  .track-card {
+    padding: 1rem;
+  }
+}
+
+/* page content spacing */
+.page-content {
+  background: transparent;
+}
+/* ---------- About page (ShipTraceUSA) ---------- */
+
+/* page-level */
+.about-page {
+  --accent: var(--color-accent);
+}
+
+/* company overview hero */
+.company-overview {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+.company-overview .overlay {
+  mix-blend-mode: multiply;
+}
+
+/* values grid */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .values-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.value-card {
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+.value-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(16, 24, 40, 0.08);
+}
+
+/* icon container styling: default (accent bg), purple border, orange icon */
+.value-icon {
+  background-color: var(--color-accent);
+  border-color: var(--color-primary);
+  color: var(--color-secondary); /* icon color */
+  transition: background-color 220ms ease, color 200ms ease,
+    transform 160ms ease;
+}
+.value-card:hover .value-icon,
+.value-card:focus-within .value-icon {
+  background-color: var(--color-primary);
+  color: #fff;
+  transform: translateY(-4px);
+}
+
+/* hero card styles for the centered contact buttons inside the company-overview */
+.company-overview .overlay + .relative .bg-white {
+  /* ensure any white background panels are readable on top of the hero */
+}
+
+/* small responsive tweaks */
+@media (max-width: 640px) {
+  .company-overview {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .value-card {
+    text-align: left;
+  }
+}
+
+/* decorative shapes */
+.shape {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+/* ensure images are responsive and don't flash a gray bg when loading */
+.about-page img {
+  background-color: var(--color-accent);
+}
+
+/* focus visible for keyboard users */
+.value-card:focus-within,
+.value-card:focus {
+  outline: 3px solid rgba(107, 33, 168, 0.08);
+  outline-offset: 4px;
+}
+
+/* buttons consistent */
+.about-page a,
+.about-page button {
+  transition: all 180ms ease;
+}
+
+/* small typography tweaks */
+.company-overview .page-subheading {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* accessibility / reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .value-card,
+  .value-icon {
+    transition: none !important;
+    transform: none !important;
+  }
+}
