@@ -6,43 +6,36 @@ import { Mail, Lock } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/admin";
-
-  // load credentials from Vite env (development)
-  const ADMIN_USER = import.meta.env.VITE_ADMIN_USER;
-  const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASS;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!ADMIN_USER || !ADMIN_PASS) {
-      toast.error(
-        "Admin credentials not set in environment (VITE_ADMIN_USER/VITE_ADMIN_PASS)"
-      );
+    const { username, password } = formData;
+
+    if (!username || !password) {
+      toast.error("Please enter username and password");
       return;
     }
 
-    if (
-      formData.email.trim() === ADMIN_USER &&
-      formData.password === ADMIN_PASS
-    ) {
-      const userPayload = { email: ADMIN_USER };
-      auth.login(userPayload);
+    // Call signIn from AuthContext
+    const res = await auth.signIn({ username, password });
+    if (res.ok) {
       toast.success("Welcome, admin");
       navigate(from, { replace: true });
       return;
     }
 
-    toast.error("Invalid credentials");
+    toast.error(res.error || "Invalid credentials");
   };
 
   return (
@@ -66,16 +59,16 @@ export default function Login() {
           </p>
         </div>
 
-        {/* email */}
+        {/* username */}
         <label className="block mb-3">
           <div className="input-wrap flex items-center gap-3 border rounded-full h-12 px-4">
             <Mail className="text-gray-400" size={16} />
             <input
-              name="email"
-              type="email"
+              name="username"
+              type="text"
               required
-              placeholder="Email address"
-              value={formData.email}
+              placeholder="Username"
+              value={formData.username}
               onChange={handleChange}
               className="flex-1 outline-none bg-transparent text-sm"
             />
@@ -98,7 +91,6 @@ export default function Login() {
           </div>
         </label>
 
-        {/* forgot link (optional) */}
         <div className="text-right mb-4">
           <button
             type="button"
@@ -115,10 +107,8 @@ export default function Login() {
           type="submit"
           className="w-full h-12 rounded-full text-white font-semibold bg-[var(--color-secondary)] hover:brightness-95 transition"
         >
-          Sign in
+          {auth.loading ? "Signing in..." : "Sign in"}
         </button>
-
-        {/* no register link per request, nothing else */}
       </form>
     </div>
   );

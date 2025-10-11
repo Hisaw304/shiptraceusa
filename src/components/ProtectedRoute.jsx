@@ -7,17 +7,14 @@ export default function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
-  // 1️⃣ Don't render anything until AuthContext finishes checking credentials
-  if (loading) return null;
+  if (loading) return null; // or a spinner component
 
-  // 2️⃣ If not authenticated, redirect once (no re-render loop)
   if (!isAuthenticated) {
-    // Prevent redirect loops (don’t redirect if already on /login)
     if (location.pathname !== "/login") {
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
+    return null;
   }
 
-  // 3️⃣ Otherwise, allow access
   return children;
 }
