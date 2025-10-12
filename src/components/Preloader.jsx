@@ -99,7 +99,7 @@ export default function Preloader({
           <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-inner z-10 overflow-hidden">
             <img
               src="/logo.png"
-              alt="Ship Track USA logo"
+              alt="Ship Trace USA logo"
               className="w-11 h-11 object-contain"
             />
           </div>
@@ -114,7 +114,7 @@ export default function Preloader({
             }}
           >
             {/* Choose casing exactly as provided */}
-            Ship Track Usa
+            Ship Trace Usa
           </div>
 
           <div className="mt-2 text-sm text-slate-600 flex items-center justify-center gap-3 opacity-90">
