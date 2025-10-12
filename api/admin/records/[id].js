@@ -80,7 +80,6 @@ export default async function handler(req, res) {
     } catch (e) {
       return res.status(400).json({ error: "Invalid JSON body" });
     }
-
     const allowedTop = [
       "serviceType",
       "shipmentDetails",
@@ -92,6 +91,8 @@ export default async function handler(req, res) {
       "expectedDeliveryDate",
       "status",
       "progressPct",
+      "image", // ✅ add this
+      "imageUrl", // ✅ or this, depending on your schema
     ];
 
     const set = {};
