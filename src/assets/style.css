@@ -5,7 +5,7 @@
 :root {
   --color-primary: #6b21a8; /* Deep Purple */
   --color-secondary: #f97316; /* Orange */
-  --color-accent: #e0f2fe; /* Light Blue background */
+  --color-accent: #faf9f6; /* Light Blue background */
 }
 
 body {
@@ -116,19 +116,21 @@ body {
   transform: translateY(0);
 }
 
-/* Cards: base + hover */
 .about-card {
-  background-color: var(--color-accent); /* light-blue default */
-  will-change: transform, background-color;
+  background-color: var(--color-accent);
+  color: var(--color-text-dark); /* default text color */
+  transition: all 0.25s ease;
 }
 
 .about-card:hover {
-  background-color: var(--color-primary); /* purple on hover */
+  background-color: var(--color-primary);
+  color: white; /* make text white on hover */
 }
 
-/* Icon: purple on light background, white on purple */
-.about-card .lucide {
-  transition: color 180ms ease;
+.about-card:hover h3,
+.about-card:hover p,
+.about-card:hover .lucide {
+  color: white;
 }
 
 /* Image panel background (prevents gray flash) */

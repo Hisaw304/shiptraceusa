@@ -370,9 +370,7 @@ export default function ContactSection() {
                 {TO_EMAIL}
               </a>
             </div>
-            <div className="flex items-center gap-2 text-sm mt-2 text-gray-700">
-              <Phone /> <span>+1 (800) 555-1234</span>
-            </div>
+            <div className="flex items-center gap-2 text-sm mt-2 text-gray-700"></div>
           </div>
         </div>
       </div>

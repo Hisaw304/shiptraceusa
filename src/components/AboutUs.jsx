@@ -139,25 +139,15 @@ export default function AboutUs() {
         {FEATURES.map(({ icon: Icon, title, desc }, i) => (
           <article
             key={i}
-            className="group about-card p-4 rounded-lg shadow-sm transform hover:-translate-y-1 transition-all duration-200 bg-[var(--color-accent)] hover:bg-[var(--color-primary)]"
-            role="article"
-            aria-labelledby={`feature-${i}`}
+            className="group about-card p-4 rounded-lg shadow-sm transform hover:-translate-y-1 transition-all duration-200 bg-[var(--color-accent)] hover:bg-[var(--color-primary)] text-gray-900 hover:text-white"
           >
             <div className="flex items-start gap-3">
-              <div
-                className="w-11 h-11 rounded-md flex items-center justify-center text-[var(--color-primary)] group-hover:text-white transition-colors"
-                aria-hidden
-              >
+              <div className="w-11 h-11 rounded-md flex items-center justify-center text-[var(--color-primary)] group-hover:text-white transition-colors">
                 <Icon size={20} />
               </div>
 
               <div>
-                <h3
-                  id={`feature-${i}`}
-                  className="text-sm font-semibold text-gray-900 group-hover:text-white"
-                >
-                  {title}
-                </h3>
+                <h3 className="text-sm font-semibold">{title}</h3>
                 <p className="mt-1 text-sm text-gray-700 group-hover:text-white/90">
                   {desc}
                 </p>

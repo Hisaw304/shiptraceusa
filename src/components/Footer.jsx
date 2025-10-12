@@ -58,9 +58,7 @@ export default function Footer() {
 
         <div>
           <h4 className="font-semibold mb-3">Contact</h4>
-          <p className="text-sm">support@shiptraceusa.com</p>
-          <p className="text-sm mt-2">+1 (800) 555-1234</p>
-          <p className="text-sm mt-2">123 Logistics Ave, Anytown, USA</p>
+          <p className="text-sm">info@shiptraceusa.com</p>
         </div>
 
         <div>
