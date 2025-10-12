@@ -200,8 +200,8 @@ export default function HeroSection() {
 
           <p className="mt-4 text-sm text-gray-300">
             Example:{" "}
-            <span className="text-[var(--color-secondary)]">
-              15b6fc6f-327a...
+            <span className="text-[var(--color-secondary)] font-semibold tracking-wide">
+              X9TPLQ72MFD1
             </span>
           </p>
         </div>

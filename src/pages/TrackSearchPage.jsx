@@ -164,7 +164,7 @@ export default function TrackSearchPage() {
                     ref={inputRef}
                     type="text"
                     aria-label="Tracking ID"
-                    placeholder="Enter tracking ID (e.g. 15b6fc6f-327a...)"
+                    placeholder="Enter tracking ID (e.g. X9TPLQ72MFD1)"
                     value={trackingId}
                     onChange={(e) => setTrackingId(e.target.value)}
                     onKeyDown={onKeyDown}
@@ -187,11 +187,11 @@ export default function TrackSearchPage() {
               </div>
 
               {/* helper row */}
-              <div className="mt-3 flex items-center justify-between text-sm text-white/90">
+              <div className="mt-3 flex items-center justify-between text-sm text-black/90">
                 <div>
                   Example:{" "}
                   <span className="text-[var(--color-secondary)]">
-                    15b6fc6f-327a...
+                    X9TPLQ72MFD1
                   </span>
                 </div>
                 <div>

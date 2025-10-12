@@ -10,7 +10,7 @@ const ADMIN = (req) => {
 export default async function handler(req, res) {
   // CORS + basic headers
   const CORS_HEADERS = {
-    "Access-Control-Allow-Origin": "https://swiftlogistics-mu.vercel.app",
+    "Access-Control-Allow-Origin": "https://shiptraceusa.vercel.app",
     "Access-Control-Allow-Methods": "GET,POST,PATCH,DELETE,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type,x-admin-key",
   };

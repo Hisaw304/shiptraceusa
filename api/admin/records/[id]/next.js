@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   // CORS for this endpoint (match your admin origin)
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://swiftlogistics-mu.vercel.app"
+    "https://shiptraceusa.vercel.app"
   );
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,x-admin-key");
