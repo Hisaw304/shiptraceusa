@@ -50,8 +50,24 @@
     />
     <meta property="twitter:image" content="/hero.jpg" />
 
-    <!-- Theme Color for Mobile -->
-    <meta name="theme-color" content="#6b21a8" />
+    <!-- Theme Color for Mobile (Purple for Light & Dark Mode) -->
+    <meta
+      name="theme-color"
+      content="#6b21a8"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#6b21a8"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <!-- Apple Safari / iOS Web App Colors -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
 
     <!-- Apple & Android Icons -->
     <link rel="apple-touch-icon" href="/logo.png" />
@@ -74,10 +90,9 @@
     style="margin: 0; font-family: 'Inter', sans-serif; background: #f9fafb"
   >
     <noscript>
-      <strong
-        >We're sorry but ShipTrace USA requires JavaScript to function
-        properly.</strong
-      >
+      <strong>
+        We're sorry but ShipTrace USA requires JavaScript to function properly.
+      </strong>
     </noscript>
     <div id="root"></div>
   </body>
