@@ -302,39 +302,42 @@ export default function AdminPage() {
         <label className="text-sm text-gray-600 font-medium">
           Type your Admin Key below
         </label>
-        <div className="flex gap-2 mt-2">
+        <div className="flex flex-col sm:flex-row sm:gap-2 mt-2">
           <input
             className="p-2 border rounded flex-1"
             placeholder="Enter your ADMIN_KEY"
             value={adminKey}
             onChange={(e) => setAdminKey(e.target.value)}
           />
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-            onClick={() => saveAdminKey(adminKey)}
-          >
-            Save
-          </button>
-          <button
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded"
-            onClick={() => {
-              try {
-                localStorage.removeItem("adminKey");
-              } catch {}
-              setAdminKey("");
-              setRecords([]);
-            }}
-          >
-            Clear
-          </button>
-          <button
-            className="px-4 py-2 bg-gray-100 rounded text-sm"
-            onClick={loadRecords}
-            disabled={!adminKey}
-          >
-            Refresh
-          </button>
+          <div className="flex gap-2 mt-2 sm:mt-0">
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+              onClick={() => saveAdminKey(adminKey)}
+            >
+              Save
+            </button>
+            <button
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded"
+              onClick={() => {
+                try {
+                  localStorage.removeItem("adminKey");
+                } catch {}
+                setAdminKey("");
+                setRecords([]);
+              }}
+            >
+              Clear
+            </button>
+            <button
+              className="px-4 py-2 bg-gray-100 rounded text-sm"
+              onClick={loadRecords}
+              disabled={!adminKey}
+            >
+              Refresh
+            </button>
+          </div>
         </div>
+
         {!adminKey && (
           <p className="text-xs text-red-600 mt-2">
             ⚠️ Please enter your admin key to access records.
