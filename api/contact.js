@@ -128,9 +128,7 @@ export default async function handler(req, res) {
   <p><strong>Subject:</strong> ${escapeHtml(subject || "Contact from site")}</p>
   <p><strong>Message:</strong><br/>${nl2br(escapeHtml(message))}</p>
   <hr/>
-  <p><small>User-Agent: ${escapeHtml(
-    req.headers["user-agent"] || ""
-  )}</small></p>
+  
 `;
 
   const mailOptions = {
