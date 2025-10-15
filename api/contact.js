@@ -1,17 +1,16 @@
-// /api/contact.js (debug-friendly version)
+// /api/contact.js
 import nodemailer from "nodemailer";
 
 /**
- * Debug-friendly Vercel serverless contact endpoint.
- * - Set DEBUG_CONTACT=true (Vercel env) to see full error text in response while debugging.
- * - Remove/unset DEBUG_CONTACT in production.
- *
+ * Vercel Serverless function for sending contact emails using nodemailer.
  * Expected env vars:
- *  - SMTP_HOST
- *  - SMTP_PORT
- *  - SMTP_USER
- *  - SMTP_PASS
- *  - CONTACT_TO_EMAIL (optional)
+ *  - SMTP_HOST (e.g. mail.privateemail.com)
+ *  - SMTP_PORT (number, e.g. 587)
+ *  - SMTP_USER (full email, e.g. info@shiptraceusa.com)
+ *  - SMTP_PASS (password or app password)
+ *  - CONTACT_TO_EMAIL (fallback recipient email)
+ *
+ * Keep secrets server-side (do NOT expose SMTP_PASS to client).
  */
 
 const VALID_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -21,9 +20,10 @@ const getIp = (req) =>
   req.socket?.remoteAddress ||
   "unknown";
 
+// Simple in-memory rate limiting per IP (ephemeral; resets on cold starts)
 const rateMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
-const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute window
+const RATE_LIMIT_MAX = 10; // max requests per window
 
 const checkRateLimit = (ip) => {
   const now = Date.now();
@@ -38,7 +38,131 @@ const checkRateLimit = (ip) => {
   return entry.count <= RATE_LIMIT_MAX;
 };
 
-// Small helpers
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
+
+  // parse body (Vercel usually gives parsed JSON, but be defensive)
+  const body =
+    typeof req.body === "string"
+      ? JSON.parse(req.body || "{}")
+      : req.body || {};
+
+  const { name, email, subject, message, hp } = body;
+  const ip = getIp(req);
+
+  // Honeypot: if filled => treat as spam (silently)
+  if (hp && String(hp).trim().length > 0) {
+    return res.status(200).json({ ok: true, spam: true, message: "OK" });
+  }
+
+  // Rate limit by IP
+  if (!checkRateLimit(ip)) {
+    return res
+      .status(429)
+      .json({ ok: false, error: "Too many requests, please wait." });
+  }
+
+  // Basic validation
+  if (!name || !email || !message) {
+    return res
+      .status(400)
+      .json({ ok: false, error: "Missing required fields." });
+  }
+  if (String(name).length > 250 || String(subject || "").length > 250) {
+    return res.status(400).json({ ok: false, error: "Input too long." });
+  }
+  if (!VALID_EMAIL_RE.test(String(email))) {
+    return res.status(400).json({ ok: false, error: "Invalid email address." });
+  }
+  if (String(message).length > 5000) {
+    return res.status(400).json({ ok: false, error: "Message too long." });
+  }
+
+  // SMTP / environment setup
+  const host = process.env.SMTP_HOST || "mail.privateemail.com";
+  const port = parseInt(process.env.SMTP_PORT || "587", 10);
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  const toEmail = process.env.CONTACT_TO_EMAIL || "info@shiptraceusa.com";
+
+  if (!host || !port || !user || !pass) {
+    console.error("Missing SMTP config in environment");
+    return res
+      .status(500)
+      .json({ ok: false, error: "Mail server not configured." });
+  }
+
+  // From address (use verified SMTP user) and replyTo for visitor replies
+  const fromAddress = user;
+
+  let transporter;
+  try {
+    transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: port === 465, // true for 465 (SSL), false for 587 (STARTTLS)
+      auth: {
+        user,
+        pass,
+      },
+      // tls: { rejectUnauthorized: true } // enable if you need strict TLS checks
+    });
+
+    // NOTE: transporter.verify() can hang in serverless; use locally to test credentials.
+    // await transporter.verify();
+  } catch (err) {
+    console.error("Failed creating transporter:", err);
+    return res
+      .status(500)
+      .json({ ok: false, error: "Failed to initialize mailer." });
+  }
+
+  // Build message body
+  const html = `
+    <h2>New contact form submission</h2>
+    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+    <p><strong>Subject:</strong> ${escapeHtml(
+      subject || "Contact from site"
+    )}</p>
+    <p><strong>Message:</strong><br/>${nl2br(escapeHtml(message))}</p>
+    <hr/>
+    <p><small>IP: ${escapeHtml(ip)}</small></p>
+    <p><small>User-Agent: ${escapeHtml(
+      req.headers["user-agent"] || ""
+    )}</small></p>
+  `;
+
+  const mailOptions = {
+    from: `"ShipTraceUSA Website" <${fromAddress}>`,
+    to: toEmail,
+    // If you'd like the visitor to receive a blind copy, uncomment:
+    // bcc: email,
+    subject: `Website contact: ${subject || "New message"}`,
+    replyTo: email, // reply will go to the visitor
+    text: `Name: ${name}\nEmail: ${email}\nSubject: ${
+      subject || "Contact from site"
+    }\n\n${message}\n\nIP: ${ip}`,
+    html,
+    // optional envelope forcing (uncomment only if you encounter provider issues):
+    // envelope: { from: fromAddress, to: toEmail }
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return res.status(200).json({ ok: true, message: "Message sent." });
+  } catch (err) {
+    console.error("Error sending mail:", err);
+    return res
+      .status(500)
+      .json({ ok: false, error: "Failed to send message." });
+  }
+}
+
+// small helpers
 function escapeHtml(unsafe = "") {
   return String(unsafe)
     .replaceAll("&", "&amp;")
@@ -49,169 +173,4 @@ function escapeHtml(unsafe = "") {
 }
 function nl2br(str) {
   return String(str).replace(/\n/g, "<br/>");
-}
-
-export default async function handler(req, res) {
-  // top-level try/catch ensures we always return JSON (or a controlled text)
-  try {
-    if (req.method !== "POST") {
-      res.setHeader("Allow", "POST");
-      return res.status(405).json({ ok: false, error: "Method not allowed" });
-    }
-
-    // Defensive parse
-    let body;
-    try {
-      body =
-        typeof req.body === "string"
-          ? JSON.parse(req.body || "{}")
-          : req.body || {};
-    } catch (err) {
-      console.error("Failed to parse request body as JSON:", err);
-      return res.status(400).json({ ok: false, error: "Invalid JSON body" });
-    }
-
-    const { name, email, subject, message, hp } = body || {};
-    const ip = getIp(req);
-
-    // Honeypot
-    if (hp && String(hp).trim().length > 0) {
-      console.log("Honeypot hit — silently accepting.");
-      return res.status(200).json({ ok: true, spam: true });
-    }
-
-    // Rate limit
-    if (!checkRateLimit(ip)) {
-      console.warn("Rate limit exceeded for IP:", ip);
-      return res.status(429).json({ ok: false, error: "Too many requests" });
-    }
-
-    // Validate
-    if (!name || !email || !message) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Missing required fields" });
-    }
-    if (String(name).length > 250 || String(subject || "").length > 250) {
-      return res.status(400).json({ ok: false, error: "Input too long" });
-    }
-    if (!VALID_EMAIL_RE.test(String(email))) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Invalid email address" });
-    }
-    if (String(message).length > 5000) {
-      return res.status(400).json({ ok: false, error: "Message too long" });
-    }
-
-    // Read env vars early and validate
-    const host = process.env.SMTP_HOST;
-    const port = parseInt(process.env.SMTP_PORT || "587", 10);
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
-    const toEmail = process.env.CONTACT_TO_EMAIL || process.env.SMTP_USER;
-
-    // Log which env var is missing (but never print SMTP_PASS)
-    if (!host || !port || !user || !pass) {
-      console.error("Missing SMTP configuration. Values present:", {
-        SMTP_HOST: !!host,
-        SMTP_PORT: !!process.env.SMTP_PORT,
-        SMTP_USER: !!user,
-        SMTP_PASS: !!pass,
-      });
-      return res
-        .status(500)
-        .json({ ok: false, error: "Mail server not configured" });
-    }
-
-    // Create transporter
-    let transporter;
-    try {
-      transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure: port === 465,
-        auth: { user, pass },
-      });
-      // Note: transporter.verify() may hang on cold starts — run locally if needed
-    } catch (err) {
-      console.error("Error creating transporter:", err);
-      // If DEBUG_CONTACT is true, include error text in response to help debugging
-      if (process.env.DEBUG_CONTACT === "true") {
-        return res.status(500).json({
-          ok: false,
-          error: "Failed creating transporter",
-          details: String(err),
-        });
-      }
-      return res
-        .status(500)
-        .json({ ok: false, error: "Failed creating transporter" });
-    }
-
-    // Build message
-    const fromAddress = user;
-    const html = `
-      <h2>New contact form submission</h2>
-      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p><strong>Subject:</strong> ${escapeHtml(
-        subject || "Contact from site"
-      )}</p>
-      <p><strong>Message:</strong><br/>${nl2br(escapeHtml(message))}</p>
-      <hr/>
-      <p><small>IP: ${escapeHtml(ip)}</small></p>
-      <p><small>User-Agent: ${escapeHtml(
-        req.headers["user-agent"] || ""
-      )}</small></p>
-    `;
-
-    const mailOptions = {
-      from: `"ShipTraceUSA Website" <${fromAddress}>`,
-      to: toEmail,
-      // bcc: email, // optionally enable to send visitor a blind copy
-      subject: `Website contact: ${subject || "New message"}`,
-      replyTo: email,
-      text: `Name: ${name}\nEmail: ${email}\nSubject: ${
-        subject || "Contact from site"
-      }\n\n${message}\n\nIP: ${ip}`,
-      html,
-    };
-
-    // Log minimal request info for debugging (no message body)
-    console.log("Sending contact email:", {
-      to: toEmail,
-      from: fromAddress,
-      ip,
-      name,
-      email,
-    });
-
-    try {
-      await transporter.sendMail(mailOptions);
-      return res.status(200).json({ ok: true, message: "Message sent" });
-    } catch (err) {
-      console.error("Error sending mail:", err);
-      if (process.env.DEBUG_CONTACT === "true") {
-        // careful: avoid exposing secrets — we only return the error text
-        return res.status(500).json({
-          ok: false,
-          error: "Failed to send mail",
-          details: String(err),
-        });
-      }
-      return res.status(500).json({ ok: false, error: "Failed to send mail" });
-    }
-  } catch (err) {
-    // catch any unexpected error and return JSON
-    console.error("Unhandled exception in /api/contact:", err);
-    if (process.env.DEBUG_CONTACT === "true") {
-      return res.status(500).json({
-        ok: false,
-        error: "Unhandled server error",
-        details: String(err),
-      });
-    }
-    return res.status(500).json({ ok: false, error: "Internal server error" });
-  }
 }
