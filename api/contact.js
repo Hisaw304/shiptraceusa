@@ -122,19 +122,16 @@ export default async function handler(req, res) {
 
   // Build message body
   const html = `
-    <h2>New contact form submission</h2>
-    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-    <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-    <p><strong>Subject:</strong> ${escapeHtml(
-      subject || "Contact from site"
-    )}</p>
-    <p><strong>Message:</strong><br/>${nl2br(escapeHtml(message))}</p>
-    <hr/>
-    <p><small>IP: ${escapeHtml(ip)}</small></p>
-    <p><small>User-Agent: ${escapeHtml(
-      req.headers["user-agent"] || ""
-    )}</small></p>
-  `;
+  <h2>New contact form submission</h2>
+  <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+  <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+  <p><strong>Subject:</strong> ${escapeHtml(subject || "Contact from site")}</p>
+  <p><strong>Message:</strong><br/>${nl2br(escapeHtml(message))}</p>
+  <hr/>
+  <p><small>User-Agent: ${escapeHtml(
+    req.headers["user-agent"] || ""
+  )}</small></p>
+`;
 
   const mailOptions = {
     from: `"ShipTraceUSA Website" <${fromAddress}>`,
@@ -145,8 +142,9 @@ export default async function handler(req, res) {
     replyTo: email, // reply will go to the visitor
     text: `Name: ${name}\nEmail: ${email}\nSubject: ${
       subject || "Contact from site"
-    }\n\n${message}\n\nIP: ${ip}`,
+    }\n\n${message}`,
     html,
+
     // optional envelope forcing (uncomment only if you encounter provider issues):
     // envelope: { from: fromAddress, to: toEmail }
   };
