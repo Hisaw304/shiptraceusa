@@ -1,20 +1,17 @@
-// src/components/ContactSection.jsx
 import React, { useRef, useState, useEffect } from "react";
-import emailjs from "@emailjs/browser";
 import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useInView } from "react-intersection-observer";
 import toast from "react-hot-toast";
-import { MapPin, Mail, Phone } from "lucide-react";
+import { MapPin, Mail } from "lucide-react";
 
 /*
-  ContactSection (ShipTraceUSA)
-  - EmailJS form (uses env vars)
-  - Honeypot to reduce spam
-  - Lazy / in-view map (render map only when visible)
-  - Multiple U.S. markers (example coords) with CircleMarker
-  - Uses CSS variables: --color-primary, --color-secondary, --color-accent
+  ContactSection (ShipTraceUSA) - Updated to use a server-side API (/api/contact)
+  - Removed EmailJS client usage
+  - Posts form data to /api/contact (Vercel serverless function or similar)
+  - Keeps honeypot spam protection and client-side validation
+  - Keeps lazy/in-view map logic
 */
 
 const LOCATIONS = [
@@ -39,7 +36,7 @@ const LOCATIONS = [
   { id: "orl", label: "Orlando, FL", coords: [28.5383, -81.3792] },
   { id: "por", label: "Portland, OR", coords: [45.5152, -122.6784] },
 ];
-// Inside your component:
+
 const customIcon = L.divIcon({
   html: `
     <div style="
@@ -64,10 +61,9 @@ const customIcon = L.divIcon({
   iconAnchor: [19, 38],
   popupAnchor: [0, -38],
 });
+
 export default function ContactSection() {
-  const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-  const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-  const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+  // NOTE: keep CONTACT_TO_EMAIL as a client-side VITE_ var only for the mailto fallback
   const TO_EMAIL =
     import.meta.env.VITE_CONTACT_TO_EMAIL || "info@shiptraceusa.com";
 
@@ -112,51 +108,59 @@ export default function ContactSection() {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
+  // Submit: POST to your serverless endpoint (/api/contact). Keep server-side secrets out of client.
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Honeypot: if filled, treat as spam
     if (form.hp) {
       console.warn("Honeypot filled — aborting.");
       return;
     }
-    // Basic validation
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast.error("Please fill your name, email, and message.");
       return;
     }
-    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-      toast.error("Email service not configured. Set your EmailJS env vars.");
-      console.warn("Missing EmailJS env vars:", {
-        SERVICE_ID,
-        TEMPLATE_ID,
-        PUBLIC_KEY,
-      });
-      return;
-    }
 
     setSending(true);
-    const templateParams = {
-      from_name: form.name,
-      from_email: form.email,
-      subject: form.subject || "Contact from ShipTraceUSA site",
-      message: form.message,
-      to_email: TO_EMAIL,
-    };
 
     try {
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
-      toast.success("Message sent — thanks! We'll reply shortly.");
-      setForm({ name: "", email: "", subject: "", message: "", hp: "" });
-      formRef.current?.reset?.();
+      const resp = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          hp: form.hp,
+        }),
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        console.error("Contact API error:", data);
+        toast.error(data?.error || "Failed to send message. Try again later.");
+      } else {
+        // api returns { ok: true } or { ok: true, spam: true }
+        if (data.spam) {
+          // gracefully pretend success to avoid giving bots feedback
+          toast.success("Message sent — thanks!");
+        } else {
+          toast.success("Message sent — thanks! We'll reply shortly.");
+        }
+        setForm({ name: "", email: "", subject: "", message: "", hp: "" });
+        formRef.current?.reset?.();
+      }
     } catch (err) {
-      console.error("EmailJS error", err);
+      console.error("Network or unexpected error:", err);
       toast.error("Failed to send message. Try again later.");
     } finally {
       setSending(false);
     }
   };
 
-  // map center: approximate geographic center of contiguous USA
   const MAP_CENTER = [39.8283, -98.5795];
 
   return (
