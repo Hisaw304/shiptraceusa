@@ -494,55 +494,6 @@ export default function TrackingPage() {
               className="max-h-full max-w-full object-contain"
             />
           </div>
-
-          {/* Shipment Summary Card */}
-          <div className="bg-gray-50 rounded p-3 trk-card">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Package size={14} />
-                <div>
-                  <div className="font-medium text-gray-800">
-                    {data?.productDescription || data?.product || "Product"}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {data?.serviceType ? `${data.serviceType}` : "Service: —"}
-                    {data?.shipmentDetails ? ` • ${data.shipmentDetails}` : ""}
-                  </div>
-                </div>
-              </div>
-              <div className="text-sm text-gray-600">
-                Qty: {data?.quantity ?? 1}
-              </div>
-            </div>
-
-            <div className="mt-3 text-sm text-gray-600">
-              <div>
-                <span className="font-medium text-gray-800">Weight:</span>{" "}
-                {data?.weightKg ? `${data.weightKg} kg` : "—"}
-              </div>
-              {data?.description && (
-                <div className="mt-1 text-xs text-gray-500">
-                  {data.description}
-                </div>
-              )}
-            </div>
-
-            <div className="mt-3">
-              <div className="text-xs text-gray-500">Current status</div>
-              <div
-                className={`mt-1 inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                  status === "Delivered"
-                    ? "bg-green-100 text-green-800"
-                    : status === "Shipped"
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
-              >
-                {status}
-              </div>
-            </div>
-          </div>
-
           {/* Progress Card */}
           <div className="bg-white rounded p-3 trk-card">
             <div className="text-xs text-gray-500">Delivery Progress</div>
@@ -634,6 +585,54 @@ export default function TrackingPage() {
                   : data?.originWarehouse
                   ? data.originWarehouse
                   : "—"}
+              </div>
+            </div>
+          </div>
+
+          {/* Shipment Summary Card */}
+          <div className="bg-gray-50 rounded p-3 trk-card">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Package size={14} />
+                <div>
+                  <div className="font-medium text-gray-800">
+                    {data?.productDescription || data?.product || "Product"}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {data?.serviceType ? `${data.serviceType}` : "Service: —"}
+                    {data?.shipmentDetails ? ` • ${data.shipmentDetails}` : ""}
+                  </div>
+                </div>
+              </div>
+              <div className="text-sm text-gray-600">
+                Qty: {data?.quantity ?? 1}
+              </div>
+            </div>
+
+            <div className="mt-3 text-sm text-gray-600">
+              <div>
+                <span className="font-medium text-gray-800">Weight:</span>{" "}
+                {data?.weightKg ? `${data.weightKg} kg` : "—"}
+              </div>
+              {data?.description && (
+                <div className="mt-1 text-xs text-gray-500">
+                  {data.description}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3">
+              <div className="text-xs text-gray-500">Current status</div>
+              <div
+                className={`mt-1 inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                  status === "Delivered"
+                    ? "bg-green-100 text-green-800"
+                    : status === "Shipped"
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                {status}
               </div>
             </div>
           </div>
