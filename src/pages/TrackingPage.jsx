@@ -405,19 +405,17 @@ export default function TrackingPage() {
       </div>
       {/* === Progress Section Wrapper (covers both divs) === */}
       <div className="progress-section-wrapper">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left column: image + grouped cards */}
-          <div className="md:col-span-1 bg-white rounded-lg p-4 shadow-sm space-y-4 trk-card">
-            {/* Progress Card */}
-            <div className="bg-white rounded p-3 trk-card">
-              <div className="text-xs text-gray-500">Delivery Progress</div>
-              <div className="mt-2">
-                <ProgressBar progress={progress} status={status} />
-                <div className="text-xs text-gray-400 mt-1">
-                  {progress}% • Checkpoint{" "}
-                  {Math.min(currentIndex + 1, route.length)} of{" "}
-                  {route.length || "?"}
-                </div>
+        {/* Left column: image + grouped cards */}
+        <div className="md:col-span-1 bg-white rounded-lg p-4 shadow-sm space-y-4 trk-card">
+          {/* Progress Card */}
+          <div className="bg-white rounded p-3 trk-card">
+            <div className="text-xs text-gray-500">Delivery Progress</div>
+            <div className="mt-2">
+              <ProgressBar progress={progress} status={status} />
+              <div className="text-xs text-gray-400 mt-1">
+                {progress}% • Checkpoint{" "}
+                {Math.min(currentIndex + 1, route.length)} of{" "}
+                {route.length || "?"}
               </div>
             </div>
           </div>
