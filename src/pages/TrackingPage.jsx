@@ -485,15 +485,6 @@ export default function TrackingPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         {/* Left column: image + grouped cards */}
         <div className="md:col-span-1 bg-white rounded-lg p-4 shadow-sm space-y-4 trk-card">
-          {/* Image */}
-          <div className="w-full h-64 bg-gray-50 rounded overflow-hidden flex items-center justify-center">
-            <img
-              src={imgSrc}
-              alt={data?.productDescription || data?.product || "Product image"}
-              onError={() => setImgError(true)}
-              className="max-h-full max-w-full object-contain"
-            />
-          </div>
           {/* Progress Card */}
           <div className="bg-white rounded p-3 trk-card">
             <div className="text-xs text-gray-500">Delivery Progress</div>
@@ -587,6 +578,15 @@ export default function TrackingPage() {
                   : "—"}
               </div>
             </div>
+          </div>
+          {/* Image */}
+          <div className="w-full h-64 bg-gray-50 rounded overflow-hidden flex items-center justify-center">
+            <img
+              src={imgSrc}
+              alt={data?.productDescription || data?.product || "Product image"}
+              onError={() => setImgError(true)}
+              className="max-h-full max-w-full object-contain"
+            />
           </div>
 
           {/* Shipment Summary Card */}
