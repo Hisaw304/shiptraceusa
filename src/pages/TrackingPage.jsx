@@ -423,7 +423,7 @@ export default function TrackingPage() {
       </div>
 
       {/* CTA-style tracking summary card (prominent) */}
-      <div className="tracking-cta trk-card rounded-lg p-4 shadow-md">
+      <div className="tracking-cta mt-6 trk-card rounded-lg p-4 shadow-md">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="inline-block card-heading-inline">Tracking ID</div>
