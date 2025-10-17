@@ -12,7 +12,7 @@ const statusInfo = {
     color: "text-gray-600",
   },
   "on hold": {
-    text: "⚠️ Your order is currently on hold. Please contact support for details.",
+    text: "⚠️ Your order is currently on hold. Delivery pending due to customs and task clearance. Please contact support for more details.",
     color: "text-yellow-700",
     link: "/contact",
   },
